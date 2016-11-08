@@ -4001,6 +4001,7 @@
     "label.input.end_date":"End Date",
     "label.S3.description":"S3 Amazon Service Configuration",
     "label.SMTP.description":"Email Service Configuration",
+    "label.SMS.description":"SMS Service Configuration",
     "label.CreditBureau.description":"Credit Bureau Integration",
     "label.anchor.editExternalServicesConfiguration":"Edit External Service Configuration",
     "label.anchor.addnewcb":"Add New Credit Bureau",
