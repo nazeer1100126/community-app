@@ -25,8 +25,9 @@
             scope.campaignData = {};
             scope.campaignData.campaignMessage = "";
             scope.previewData = {};
-            scope.triggerTypeSubTypeOptions = [];
-            scope.triggerSubTypes = [];
+            scope.filteredBusinessRules = [];
+            var triggeredBusinessRule = [];
+            var nonTriggeredBusinessRule = [];
 
             scope.buildMessageTemplate = function (paramName) {
                 scope.campaignData.campaignMessage += " " + "{{" + paramName + "}}";
@@ -64,6 +65,25 @@
                 });
 
             } ;
+            scope.getBusinessRule = function() {
+                if (!_.isUndefined(scope.campaignData.triggerType.value) && scope.campaignData.triggerType.value === 'Triggered') {
+                    scope.filteredBusinessRules = triggeredBusinessRule;
+                } else {
+                    scope.filteredBusinessRules =  nonTriggeredBusinessRule;
+                }
+            };
+
+            scope.filterBusinessRule = function() {
+                triggeredBusinessRule = [];
+                nonTriggeredBusinessRule = [];
+                angular.forEach(scope.businessRuleOptions, function (businessRule) {
+                    if (!_.isNull(businessRule.reportSubType) && !_.isUndefined(businessRule.reportSubType) && businessRule.reportSubType === 'Triggered') {
+                        triggeredBusinessRule.push(businessRule);
+                    } else {
+                        nonTriggeredBusinessRule.push(businessRule);
+                    }
+                });
+            };
 
             function intializeParams(paramData, params) {
                 scope.errorStatus = undefined;
@@ -121,15 +141,24 @@
 
             scope.getColumnHeaders = function () {
                 //scope.formData = scope.reportParams;
-                if (scope.campaignData.triggerType.value != 'Triggered') {
+                // if (scope.campaignData.triggerType.value != 'Triggered') {
                     scope.formData.reportSource = scope.campaignData.report.reportName;
-                    var inQueryParameters = buildReportParms();
+                  //  var inQueryParameters = buildReportParms();
                     //scope.formData = inQueryParameters;
+
+                for (var i = 0; i <  scope.reqFields.length; i++) {
+                    var tempForm = {} ;
+                    var tempParam =  scope.reqFields[i];
+                    if (tempParam.displayType == 'none') {
+                        var paramName = tempParam.variable;
+                        scope.formData[tempParam.inputName] = -1 ;
+                    }
+                }
                     resourceFactory.runReportsResource.getReport(scope.formData, function (data) {
                         // get column headers for the given report
                         scope.reportData.columnHeaders = data.columnHeaders;
                     });
-                }
+                // }
             };
 
             function buildPreviewParms() {
@@ -140,7 +169,7 @@
                     for (var j = 0; j < scope.smsReportParameters.length; j++) {
                         var tempParam = scope.smsReportParameters[j];
                         if (reqField.name == tempParam.parameterName) {
-                            var paramName = tempParam.reportParameterName;
+                            var paramName = reqField.variable;
                             if (paramCount > 1) reportParams += ","
                             reportParams += '\"' + paramName  + '\"' + ":" + scope.formData[scope.reqFields[i].inputName];
                             paramCount = paramCount + 1;
@@ -159,14 +188,10 @@
                     message: scope.campaignData.campaignMessage,
                     paramValue: scope.paramValues
                 };
-                if (scope.campaignData.triggerType.value === 'Triggered') {
-                    scope.previewMessage = scope.campaignData.campaignMessage;
-                } else {
                     resourceFactory.smsCampaignResource.preview({additionalParam: 'preview'}, scope.previewData, function (data) {
                         scope.previewMessage = data.campaignMessage;
                         scope.totalNumberOfMessages = data.totalNumberOfMessages;
                     });
-                }
             }
 
             function buildReportParms() {
@@ -177,13 +202,27 @@
                     for (var j = 0; j < scope.smsReportParameters.length; j++) {
                         var tempParam = scope.smsReportParameters[j];
                         if (reqField.name == tempParam.parameterName) {
-                            var paramName = 'R_' + tempParam.reportParameterName;
-                            if (paramCount > 1) reportParams += ","
-                            reportParams += encodeURIComponent(paramName) + ":" + encodeURIComponent(scope.formData[scope.reqFields[i].inputName]);
-                            paramCount = paramCount + 1;
+                            if(reqField.displayType == 'none') {
+                                var paramName = 'R_' + tempParam.reportParameterName;
+                                if (paramCount > 1) reportParams += ","
+                                reportParams += encodeURIComponent(paramName) + ":" + encodeURIComponent("-1");
+                                paramCount = paramCount + 1;
+                            }else {
+                                var paramName = 'R_' + tempParam.reportParameterName;
+                                if (paramCount > 1) reportParams += ","
+                                reportParams += encodeURIComponent(paramName) + ":" + encodeURIComponent(scope.formData[scope.reqFields[i].inputName]);
+                                paramCount = paramCount + 1;
+                            }
                         }
                     }
                 }
+                /*for (var i = 0; i < scope.reqFields.length; i++) {
+                    var tempParam = scope.reqFields[i];
+                    if (tempParam.displayType == 'none') {
+                        reportParams += ","
+                        reportParams += encodeURIComponent(tempParam.inputName) + ":" + encodeURIComponent("-1");
+                    }
+                }*/
                 return reportParams;
             };
 
@@ -192,9 +231,10 @@
                 scope.campaignTypeOptions = data.campaignTypeOptions;
                 scope.providerOptions = data.smsProviderOptions ;
                 scope.businessRuleOptions = data.businessRulesOptions ;
+                scope.filteredBusinessRules = data.businessRulesOptions;
                 scope.frequencyTypeOptions = data.frequencyTypeOptions;
                 scope.weekDays = data.weekDays;
-                scope.triggerTypeSubTypeOptions = data.triggerTypeSubTypeOptions;
+                scope.filterBusinessRule();
                 //scope.months = data.months;
                 //scope.periodFrequencyOptions = data.periodFrequencyOptions;
 
@@ -207,10 +247,6 @@
                     scope.minActivationDate = data.activationDate;
                 });
             });
-
-            scope.updateSubTypes = function() {
-                scope.triggerSubTypes = scope.campaignData.actualTriggerType.triggerSubTypes;
-            };
 
             scope.changeStaff = function (staffId) {
                 resourceFactory.employeeResource.get({staffInSelectedOfficeOnly:true, associations:'all', staffId: staffId}, function (data) {
@@ -283,13 +319,8 @@
                     repeatsOnDay: scope.campaignData.repeatsOnDay
                 }
 
-                if (scope.campaignData.triggerType.value === 'Triggered') {
-                    scope.submissionData.triggerEntityType = scope.campaignData.actualTriggerType.actualTriggerType.id;
-                    scope.submissionData.triggerActionType = scope.campaignData.triggerSubType.id;
-                } else {
-                    scope.submissionData.triggerEntityType.runReportId = scope.campaignData.report.reportId;
-                    scope.submissionData.triggerEntityType.paramValue = scope.paramValues;
-                }
+                scope.submissionData.runReportId = scope.campaignData.report.reportId;
+                scope.submissionData.paramValue = scope.paramValues;
 
                 resourceFactory.smsCampaignResource.save(scope.submissionData, function(data) {
                     location.path('/viewsmscampaign/' + data.resourceId);

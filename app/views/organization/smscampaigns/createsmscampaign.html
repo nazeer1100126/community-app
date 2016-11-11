@@ -86,7 +86,7 @@
                                                         class="form-control" required
                                                         ng-options="triggerTypeOption as triggerTypeOption.value for triggerTypeOption in triggerTypeOptions"
                                                         value="{{triggerTypeOption.id}}"
-                                                        data-placeholder="{{'label.menu.triggerType' | translate}}">
+                                                        data-placeholder="{{'label.menu.triggerType' | translate}}" ng-change="getBusinessRule()">
                                                     <option value=""></option>
                                                 </select>
                                             </div>
@@ -155,49 +155,19 @@
                                                 {{repeatsOnOption.value}} <br/>
                                             </div>
                                         </div>
-
-                                        <div class="form-group" ng-if="campaignData.triggerType.value === 'Triggered'">
-                                            <label class="control-label col-sm-2">{{'label.input.entity' | translate}}<span
-                                                    class="required">*</span></label>
-                                            <div class="col-sm-3">
-                                                <select id="actualTriggerType" name="actualTriggerType" ng-model="campaignData.actualTriggerType" chosen="triggerTypeSubTypeOptions"
-                                                        ng-options="triggerTypeSubTypeOption as triggerTypeSubTypeOption.actualTriggerType.value for triggerTypeSubTypeOption in triggerTypeSubTypeOptions"
-                                                        value="{{triggerTypeSubTypeOption}}" ng-change="updateSubTypes()" class="form-control" data-placeholder="{{'label.selectentity' | translate}}"
-                                                        ng-required="campaignData.triggerType.value === 'Triggered'">
-                                                    <option value=""></option>
-                                                </select>
-                                            </div>
-                                            <div>
-                                                <form-validate valattributeform="createsmsform" valattribute="actualTriggerType"/>
-                                            </div>
-                                            <label class="control-label col-sm-2">{{'label.input.actions' | translate}}<span
-                                                    class="required">*</span></label>
-                                            <div class="col-sm-3">
-                                                <select id="triggerSubType" name="triggerSubType" ng-model="campaignData.triggerSubType" chosen="triggerSubTypes"
-                                                        ng-options="triggerSubType as triggerSubType.value for triggerSubType in triggerSubTypes"
-                                                        value="{{triggerSubType}}" class="form-control" data-placeholder="{{'label.selectaction' | translate}}"
-                                                        ng-required="campaignData.triggerType.value === 'Triggered'">
-                                                    <option value=""></option>
-                                                </select>
-                                            </div>
-                                            <div>
-                                                <form-validate valattributeform="createsmsform" valattribute="triggerSubType"/>
-                                            </div>
-                                        </div>
-
                                         <br/>
-                                        <div class="form-group" ng-if="campaignData.triggerType.value != 'Triggered'">
+                                        <div class="form-group">
                                             <label class="control-label col-sm-2">{{'label.input.businessRule' |
                                                 translate}} <span class="required">*</span> </label>
                                             <div class="col-sm-3">
                                                 <select id="businessRule"
                                                         name="businessRule"
-                                                        chosen="businessRuleOptions"
+                                                        chosen="filteredBusinessRules"
                                                         ng-model="campaignData.report"
                                                         class="form-control"
-                                                        ng-options="businessRuleOption as businessRuleOption.reportName for businessRuleOption in businessRuleOptions"
+                                                        ng-options="businessRuleOption as businessRuleOption.reportName for businessRuleOption in filteredBusinessRules"
                                                         value="{{businessRuleOption}}" ng-change="reportSelected(campaignData.report.reportName)"
-                                                        data-placeholder="{{'label.menu.businessRule' | translate}}" ng-required="campaignData.triggerType.value != 'Triggered'">
+                                                        data-placeholder="{{'label.menu.businessRule' | translate}}">
                                                     <option value=""></option>
                                                 </select>
                                             </div>
@@ -206,9 +176,9 @@
                                             </div>
                                         </div>
 
-                                        <h3 ng-if="campaignData.triggerType.value != 'Triggered'">{{'label.heading.businessRuleParameters' | translate}}</h3>
+                                        <h3>{{'label.heading.businessRuleParameters' | translate}}</h3>
 
-                                        <div ng-if="campaignData.triggerType.value != 'Triggered'" class="alert-block form-horizontal">
+                                        <div class="alert-block form-horizontal">
                                             <br>
 
                                             <div class="form-group info" ng-repeat="reportParam in reportParams">
@@ -219,7 +189,7 @@
                                                     <select chosen="reportParam.selectOptions" id="{{reportParam.inputName}}" ng-model="formData[reportParam.inputName]"
                                                             ng-options="selectOption.id as selectOption.name for selectOption in reportParam.selectOptions"
                                                             value="{{selectOption.id}}"
-                                                            class="form-control input-xlarge" ng-change="getDependencies(reportParam)" ng-required="campaignData.triggerType.value != 'Triggered'">
+                                                            class="form-control input-xlarge" ng-change="getDependencies(reportParam)">
                                                         <option value="">--{{"label.menu.selectone" | translate}}--</option>
                                                     </select>
                                                 </div>
@@ -230,7 +200,7 @@
                                                 <label class="control-label col-sm-2" for="{{reportTextParam.variable}}">{{ reportTextParam.label |
                                                     translate}} <span class="required">*</span></label>
                                                 <div class="col-sm-3">
-                                                    <input id="{{reportTextParam.inputName}}" type="text" ng-model="formData[reportTextParam.inputName]"  class="form-control" ng-required="campaignData.triggerType.value != 'Triggered'"/>
+                                                    <input id="{{reportTextParam.inputName}}" type="text" ng-model="formData[reportTextParam.inputName]"  class="form-control"/>
                                                 </div>
                                                 <form-validate valattributeform="createsmsform"
                                                                valattribute="{{reportParam.inputName}}"/>
@@ -242,7 +212,7 @@
                                                 <div class="col-sm-3">
                                                     <input id="{{reportDateParam.inputName}}" type="text" datepicker-pop="yyyy-MM-dd"
                                                            ng-model="formData[reportDateParam.inputName]" is-open="'opened'+$index" min="minDate"
-                                                           max="'2020-06-22'" date-disabled="disabled(date, mode)"  class="form-control" ng-required="campaignData.triggerType.value != 'Triggered'"/>
+                                                           max="'2020-06-22'" date-disabled="disabled(date, mode)"  class="form-control"/>
                                                 </div>
                                                 <form-validate valattributeform="createsmsform"
                                                                valattribute="{{reportParam.inputName}}"/>
@@ -284,7 +254,7 @@
                                                                valattribute="campaignMessage"/>
                                             </div>
                                         </div>
-                                        <h3 ng-if="campaignData.triggerType.value != 'Triggered'">{{'label.heading.templateparameters' | translate}}</h3>
+                                        <h3>{{'label.heading.templateparameters' | translate}}</h3>
 
                                         <span ng-repeat="columnHeader in reportData.columnHeaders">
                                             <strong>
@@ -335,7 +305,7 @@
 
                                                     <td colspan="3">{{campaignData.smsProvider.providerName}}</td>
                                                 </tr>
-                                                <tr ng-if="campaignData.triggerType.value != 'Triggered'">
+                                                <tr>
                                                     <td>{{'label.heading.businessRule' | translate}}</td>
                                                     <td colspan="3">{{campaignData.report.reportName}}</td>
                                                 </tr>

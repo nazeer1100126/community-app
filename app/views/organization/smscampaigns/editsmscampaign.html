@@ -102,21 +102,8 @@
                     </div>
                 </div>
 
-                <div class="form-group" ng-if="campaignData.triggerType === 3">
-                    <label class="control-label col-sm-2">{{'label.input.entity' | translate}}</label>
-                    <div class="col-sm-3">
-                        {{campaignData.actualTriggerType.value}}
-                    </div>
-                </div>
 
-                <div class="form-group" ng-if="campaignData.triggerType === 3">
-                    <label class="control-label col-sm-2">{{'label.input.actions' | translate}}</label>
-                    <div class="col-sm-3">
-                        {{campaignData.triggerSubType.value}}
-                    </div>
-                </div>
-
-                <div class="form-group" ng-if="campaignData.triggerType != 3">
+                <div class="form-group">
                     <label class="control-label col-sm-2">{{'label.input.businessRule' |
                         translate}} <span class="required">*</span> </label>
                     <div class="col-sm-3">
@@ -137,7 +124,7 @@
 
                 <!--<h3>{{'label.heading.businessRuleParameters' | translate}}</h3>-->
 
-                <div ng-if="campaignData.triggerType != 3" class="alert-block form-horizontal">
+                <div class="alert-block form-horizontal">
                     <br>
 
                     <div class="form-group info" ng-repeat="reportParam in reportParams">
@@ -193,7 +180,7 @@
                                        valattribute="campaignMessage"/>
                     </div>
                 </div>
-                <h3 ng-if="campaignData.triggerType != 3">{{'label.heading.templateparameters' | translate}}</h3>
+                <h3>{{'label.heading.templateparameters' | translate}}</h3>
                 <span ng-repeat="columnHeader in reportData.columnHeaders">
                 <strong>
                     <a class="reportColumns" style="cursor:pointer" ng-click="buildMessageTemplate(columnHeader.columnName)">{{columnHeader.columnName}}</a>

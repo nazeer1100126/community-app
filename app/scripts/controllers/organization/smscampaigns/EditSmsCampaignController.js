@@ -76,8 +76,6 @@
                 var simpleTime = new Date(scope.simpleDate.getTime());
                 scope.campaignData.recurrenceStartDate = dateFilter(scope.simpleDate, scope.df);
                 scope.campaignData.time = new Date(0, 0, 0, simpleTime.getHours(), simpleTime.getMinutes(), simpleTime.getSeconds());
-                scope.campaignData.actualTriggerType = data.triggerEntityType;
-                scope.campaignData.triggerSubType = data.triggerActionType;
                 prepopulateReportParams();
             });
 
@@ -191,10 +189,6 @@
                 });
             });
 
-            scope.updateSubTypes = function() {
-                scope.triggerSubTypes = scope.campaignData.actualTriggerType.triggerSubTypes;
-            };
-
             scope.changeStaff = function (staffId) {
                 resourceFactory.employeeResource.get({staffInSelectedOfficeOnly:true, associations:'all', staffId: staffId}, function (data) {
                     scope.linkedvillages = data.linkedVillages;
@@ -215,10 +209,8 @@
                     scope.scheduledDateTime.setMinutes(scope.campaignData.time.getMinutes());
                     scope.scheduledDateTime.setSeconds(scope.campaignData.time.getSeconds());
                     scope.scheduledDateTime = dateFilter(scope.scheduledDateTime, scope.dft);
-                } else if (scope.campaignData.triggerType != 3) {
-                    scope.submissionData.runReportId = scope.campaignData.report;
-                    scope.submissionData.paramValue = scope.paramValues;
                 }
+                
                 scope.submissionData = {
                     providerId: scope.campaignData.smsProvider,
                     //runReportId: scope.campaignData.report,
@@ -230,7 +222,9 @@
                     dateFormat: scope.df,
                     locale: scope.optlang.code,
                     recurrenceStartDate: scope.scheduledDateTime,
-                    dateTimeFormat: scope.dft
+                    dateTimeFormat: scope.dft,
+                    runReportId : scope.campaignData.report,
+                    paramValue : scope.paramValues
                 }
 
                 resourceFactory.smsCampaignResource.update({campaignId: routeParams.campaignId}, scope.submissionData, function(data) {
