@@ -371,7 +371,7 @@
                     var cl = scope.clients.length;
                     for (var j = 0; j < cl; j++) {
                         scope.client = scope.clients[j];
-                        if (scope.client.attendanceType.id === 0) {
+                        if (scope.client.attendanceType && scope.client.attendanceType.id === 0) {
                             scope.client.attendanceType.id = 1;
                         }
                     }
@@ -390,8 +390,12 @@
                                 }
                                 var savingsTransaction = {
                                     savingsId:saving.savingsId,
-                                    transactionAmount:dueAmount
+                                    transactionAmount:dueAmount,
+                                    depositAccountType: saving.depositAccountType=='Saving Deposit'?100:(saving.depositAccountType=='Recurring Deposit'?300:400)
                                 };
+                                /*if(savingsTransaction.transactionAmount>0){
+                                    scope.bulkSavingsDueTransactions.push(savingsTransaction);
+                                }*/
                                 scope.bulkSavingsDueTransactions.push(savingsTransaction);
                             });
 
@@ -422,7 +426,7 @@
                     _.each(group.clients, function (client) {
                         var clientAttendanceDetails = {
                             clientId: client.clientId,
-                            attendanceType: client.attendanceType.id
+                            attendanceType: client.attendanceType != undefined?client.attendanceType.id:null
                         };
                         scope.clientsAttendance.push(clientAttendanceDetails);
                     });
