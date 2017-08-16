@@ -2,12 +2,11 @@
     <ul class="breadcrumb">
         <li ><a href="#/system">{{'label.anchor.system' | translate}}</a></li>
         <li class="active">{{'label.heading.createsurvey' | translate}}</li>
-    </ul>
-    <wizard>
-        <wz-step wz-title="Basic Information">
+    </ul>   
+    <form name="createsurveyform">     
         <div class="card">
             <div class="card-content">
-                <form name="createsurveyform" novalidate="" class="card form-horizontal well" rc-submit="submitDetails()">
+                <div novalidate="" class="card form-horizontal well" rc-submit="submitDetails()">
                    <api-validate></api-validate>
                    <fieldset>
                     <legend>{{'label.heading.createsurvey' | translate}}</legend>
@@ -15,7 +14,7 @@
                        <label class="control-label col-sm-2" for="key">{{'label.heading.key' | translate}}<span
                           class="required">*</span></label>
                        <div class="col-sm-3">
-                          <input type="text" id="key" name="key" ng-model="formData.key" class="form-control"
+                          <input type="text" id="key" name="key" maxlength="32" ng-model="formData.key" class="form-control"
                              required late-Validate/>
                        </div>
                        <div class="col-sm-2">
@@ -37,7 +36,7 @@
                        <label class="control-label col-sm-2" for="countrycode">{{'label.heading.countrycode' | translate}}<span
                           class="required">*</span></label>
                        <div class="col-sm-3">
-                          <input type="text" id="countrycode" name="countrycode" ng-model="formData.countryCode" class="form-control"
+                          <input type="text" id="countrycode" name="countrycode" ng-model="formData.countryCode" max class="form-control"
                              required late-Validate/>
                        </div>
                        <div class="col-sm-2">
@@ -59,21 +58,18 @@
                         <input type="submit" id="save1" type="submit" class="btn btn-primary" value="{{'label.button.proceed' | translate}}" >       
                     </div>
                    </fieldset>  
-                </form>
+                </div>
             </div>
         </div>
-        </wz-step>
-        <wz-step wz-title="Questions">
             <div class="card well">
                 <div class="card-content">
                     <legend>{{'label.heading.questions' | translate}}</legend>
                     <div class="content">
                         <br>
-
                         <div class="row">
                             <div class="col-sm-8">
-                                <form name="addquestionform" class="form-horizontal" rc_submit="addQuestion()">
-                                    
+                                <div name="addquestionform" class="form-horizontal">
+                                    <api-validate></api-validate>
                                     <div class="form-group" ng-if="showQBtn">
                                         <div class="col-sm-12">
                                             <a class="btn btn-md btn-primary" ng-click="showQuestionForm()"><span class="fa fa-plus"></span> {{'label.button.addquestion' | translate}}</a>
@@ -113,22 +109,7 @@
                                                 <form-validate valattributeform="addquestionform" valattribute="description"/>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <div class="col-sm-offset-2 col-sm-6">
-                                                <button type="button" class="btn btn-default" ng-click="discardQuestion()">{{ 'label.button.cancel' | translate }}</button>
-                                                <button type="submit" class="btn btn-primary"><span class="fa fa-plus"></span> {{'label.button.addquestion' | translate}}</button>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div class="toolbar">
-                                                <h3>Options</h3>
-                                            </div>
-                                            <div class="list-group">
-                                                <div class="list-group-item" ng-repeat="option in question.responseDatas">
-                                                    <h4 class="list-group-item-heading">{{ option.text }} <span class="pull-right fa-2x fa text-danger fa-times" ng-click="deleteOption($index)"></span></h4>
-                                                    <p class="list-group-item-text">{{ 'label.heading.value' | translate}} :  {{ option.value }}</p>
-                                                </div>
-                                            </div>
+                                        
                                             <div class="form-group">
                                                 <div class="col-sm-10 col-sm-offset-2">
                                                     <a class="btn btn-md btn-primary" ng-click="showOptionForm()" ng-if="showOptBtn"><span class="fa fa-plus"></span> {{'label.button.addoption' | translate}}</a>
@@ -164,9 +145,25 @@
                                                         </div>
                                                   </div>
                                             </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-2 col-sm-6">
+                                                <button type="button" class="btn btn-default" ng-click="discardQuestion()">{{ 'label.button.cancel' | translate }}</button>
+                                                <button type="submit" class="btn btn-primary"  ng-click="addQuestion()" ><span class="fa fa-plus"></span> {{'label.button.addquestion' | translate}}</button>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="toolbar">
+                                                <h3>Options</h3>
+                                            </div>
+                                            <div class="list-group">
+                                                <div class="list-group-item" ng-repeat="option in question.responseDatas">
+                                                    <h4 class="list-group-item-heading">{{ option.text }} <span class="pull-right fa-2x fa text-danger fa-times" ng-click="deleteOption($index)"></span></h4>
+                                                    <p class="list-group-item-text">{{ 'label.heading.value' | translate}} :  {{ option.value }}</p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>    
-                                </form>                 
+                                </div>                 
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="list-group">
@@ -179,7 +176,8 @@
                         </div>
                     </div>
                 </div>
-             </div>   
-        </wz-step>
-    </wizard>     
+             </div> 
+
+
+</form>
 </div>
