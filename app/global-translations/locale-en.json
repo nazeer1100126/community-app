@@ -4260,5 +4260,7 @@
 
     "label.selecton" : "Select On",
     "label.selectday" : "Select Day",
-    "label.heading.repaymentscheduleing.rule" : "Repayment Scheduleing Type"
+    "label.heading.repaymentscheduleing.rule" : "Repayment Scheduleing Type",
+    "label.input.options" : "Options",
+    "label.heading.options" : "Options"
 }

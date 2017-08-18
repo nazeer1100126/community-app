@@ -2,12 +2,11 @@
     <ul class="breadcrumb">
         <li ><a href="#/system">{{'label.anchor.system' | translate}}</a></li>
         <li class="active">{{'label.heading.createsurvey' | translate}}</li>
-    </ul>
-    <wizard>
-        <wz-step wz-title="Basic Information">
+    </ul>   
+    <form name="createsurveyform">     
         <div class="card">
             <div class="card-content">
-                <form name="createsurveyform" novalidate="" class="card form-horizontal well" rc-submit="submitDetails()">
+                <div novalidate="" class="card form-horizontal well" ><!-- rc-submit="submitDetails()" -->
                    <api-validate></api-validate>
                    <fieldset>
                     <legend>{{'label.heading.createsurvey' | translate}}</legend>
@@ -15,35 +14,52 @@
                        <label class="control-label col-sm-2" for="key">{{'label.heading.key' | translate}}<span
                           class="required">*</span></label>
                        <div class="col-sm-3">
-                          <input type="text" id="key" name="key" ng-model="formData.key" class="form-control"
+                          <input type="text" id="key" name="key" maxlength="32" ng-model="formData.key" class="form-control"
                              required late-Validate/>
                        </div>
-                       <div class="col-sm-2">
+                       <div class="col-sm-1">
                           <form-validate valattributeform="createsurveyform" valattribute="key"/>
                        </div>
+                       <label class="control-label col-sm-1" for="name">{{'label.input.name' | translate}}<span
+                          class="required">*</span></label>
+                       <div class="col-sm-3">
+                          <input type="text" id="name" name="name"  maxlength="255" ng-model="formData.name" class="form-control"
+                             required late-Validate/>
+                       </div>
+                       <div class="col-sm-1">
+                          <form-validate valattributeform="createsurveyform" valattribute="name"/>
+                       </div>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                        <label class="control-label col-sm-2" for="name">{{'label.input.name' | translate}}<span
                           class="required">*</span></label>
                        <div class="col-sm-3">
-                          <input type="text" id="name" name="name" ng-model="formData.name" class="form-control"
+                          <input type="text" id="name" name="name"  maxlength="255" ng-model="formData.name" class="form-control"
                              required late-Validate/>
                        </div>
                        <div class="col-sm-2">
                           <form-validate valattributeform="createsurveyform" valattribute="name"/>
                        </div>
-                    </div>
+                    </div> -->
                     <div class="form-group">
                        <label class="control-label col-sm-2" for="countrycode">{{'label.heading.countrycode' | translate}}<span
                           class="required">*</span></label>
                        <div class="col-sm-3">
-                          <input type="text" id="countrycode" name="countrycode" ng-model="formData.countryCode" class="form-control"
+                          <input type="text" id="countrycode" name="countrycode" maxlength="2" ng-model="formData.countryCode" max class="form-control"
                              required late-Validate/>
                        </div>
-                       <div class="col-sm-2">
+                       <div class="col-sm-1">
                           <form-validate valattributeform="createsurveyform" valattribute="countrycode"/>
                        </div>
-                    </div>
+                       <label class="control-label col-sm-1" for="description">{{'label.input.description' | translate}}</label>
+                       <div class="col-sm-3">
+                          <textarea type="text" id="description" name="description" ng-model="formData.description" class="form-control"
+                            ></textarea>
+                       </div>
+                       <div class="col-sm-1">
+                          <form-validate valattributeform="createsurveyform" valattribute="description"/>
+                       </div>
+                    </div><!-- 
                     <div class="form-group">
                        <label class="control-label col-sm-2" for="description">{{'label.input.description' | translate}}</label>
                        <div class="col-sm-3">
@@ -53,27 +69,24 @@
                        <div class="col-sm-2">
                           <form-validate valattributeform="createsurveyform" valattribute="description"/>
                        </div>
-                    </div>
+                    </div> -->
                     
                     <div class="pull-right">
-                        <input type="submit" id="save1" type="submit" class="btn btn-primary" value="{{'label.button.proceed' | translate}}" >       
+                      <input type="submit" id="save1" type="submit" class="btn btn-primary" ng-click="showQuestionsForm()" value="{{'label.button.proceed' | translate}}" >       
                     </div>
                    </fieldset>  
-                </form>
+                </div>
             </div>
         </div>
-        </wz-step>
-        <wz-step wz-title="Questions">
-            <div class="card well">
+            <div class="card well" ng-show="showQuestions">
                 <div class="card-content">
                     <legend>{{'label.heading.questions' | translate}}</legend>
                     <div class="content">
                         <br>
-
                         <div class="row">
-                            <div class="col-sm-8">
-                                <form name="addquestionform" class="form-horizontal" rc_submit="addQuestion()">
-                                    
+                            <div class="col-sm-12">
+                                <div name="addquestionform" class="form-horizontal">
+                                    <api-validate></api-validate>
                                     <div class="form-group" ng-if="showQBtn">
                                         <div class="col-sm-12">
                                             <a class="btn btn-md btn-primary" ng-click="showQuestionForm()"><span class="fa fa-plus"></span> {{'label.button.addquestion' | translate}}</a>
@@ -82,30 +95,38 @@
                                     </div>
                                     <div class="qform" ng-if="showQForm">
                                         <div class="form-group">
-                                            <label class="control-label col-sm-4" for="key">{{'label.heading.key' | translate}}<span
+                                            <label class="control-label col-sm-2" for="key">{{'label.heading.key' | translate}}<span
                                               class="required">*</span></label>
-                                              <div class="col-sm-5">
-                                                  <input type="text" id="key" name="key" ng-model="question.key" class="form-control"
-                                                  required late-Validate/>
+                                              <div class="col-sm-3">
+                                                  <input type="text" id="key" name="key" maxlength="32"  ng-model="question.key" class="form-control"  required late-Validate/>
                                               </div>
-                                              <div class="col-sm-2">
+                                              <div class="col-sm-1">
                                                   <form-validate valattributeform="addquestionform" valattribute="key"/>
                                               </div>
-                                        </div>
-                                        <div class="form-group">
-                                             <label class="control-label col-sm-4" for="name">{{'label.text' | translate}}<span
+                                              <label class="control-label col-sm-1" for="name">{{'label.text' | translate}}<span
                                               class="required">*</span></label>
-                                              <div class="col-sm-5">
-                                                  <input type="text" id="text" name="text" ng-model="question.text" class="form-control"
+                                              <div class="col-sm-3">
+                                                  <input type="text" id="text" name="text" maxlength="255"  ng-model="question.text" class="form-control"
                                                   required late-Validate/>
                                               </div>
-                                              <div class="col-sm-2">
+                                              <div class="col-sm-1">
                                                   <form-validate valattributeform="addquestionform" valattribute="text"/>
                                               </div>
                                         </div>
+                                        <!-- <div class="form-group">
+                                             <label class="control-label col-sm-4" for="name">{{'label.text' | translate}}<span
+                                              class="required">*</span></label>
+                                              <div class="col-sm-5">
+                                                  <input type="text" id="text" name="text" maxlength="255"  ng-model="question.text" class="form-control"
+                                                  required late-Validate/>
+                                              </div>
+                                              <div class="col-sm-1">
+                                                  <form-validate valattributeform="addquestionform" valattribute="text"/>
+                                              </div>
+                                        </div> -->
                                         <div class="form-group">
-                                            <label class="control-label col-sm-4" for="description">{{'label.input.description' | translate}}</label>
-                                            <div class="col-sm-5">
+                                            <label class="control-label col-sm-2" for="description">{{'label.input.description' | translate}}</label>
+                                            <div class="col-sm-3">
                                                 <textarea type="text" id="description" name="description" ng-model="question.description" class="form-control"
                                                 ></textarea>
                                             </div>
@@ -113,13 +134,76 @@
                                                 <form-validate valattributeform="addquestionform" valattribute="description"/>
                                             </div>
                                         </div>
+                                            <div class="form-group">
+                                               <label class="control-label col-sm-2" for="description">{{'label.input.options' | translate}}
+                                                <span class="required">*</span></label>
+                                                <div class="col-sm-10">
+                                                    <a class="btn btn-md btn-primary" ng-click="showOptionForm()" ng-if="showOptBtn"><span class="fa fa-plus"></span> {{'label.button.addoption' | translate}}</a>
+                                                </div>
+                                            </div>
+                                            <div class="form-group" ng-if="showOptForm"><!-- class="optForm"  -->
+                                                <div class="form-group">
+                                                   <label class="control-label col-sm-2" for="name">{{'label.text' | translate}}<span
+                                                      class="required">*</span></label>
+                                                      <div class="col-sm-3">
+                                                          <input type="text" id="text" name="text" ng-model="option.text" class="form-control" required late-Validate/>
+                                                      </div>
+                                                      <div class="col-sm-1">
+                                                          <form-validate valattributeform="addquestionform" valattribute="text"/>
+                                                      </div>
+                                                      <label class="control-label col-sm-1" for="name">{{'label.heading.value' | translate}}<span
+                                                      class="required">*</span></label>
+                                                      <div class="col-sm-2">
+                                                          <input type="number" id="text" name="value" onKeyPress="if(this.value.length>3) return false;"  ng-model="option.value" class="form-control"
+                                                          required late-Validate/>
+                                                      </div>
+                                                      <div class="col-sm-1">
+                                                          <form-validate valattributeform="addquestionform" valattribute="text"/>
+                                                      </div>
+                                                      <div class="col-sm-2">
+                                                            <button type="button" class="btn btn-default" ng-click="discardOpt()">{{ 'label.button.cancel' | translate }}</button>
+                                                            <button type="button" class="btn btn-primary" ng-click="addOpt()"><span class="fa fa-plus"></span> {{'label.button.add' | translate}}</button>
+                                                        </div>
+                                                  </div>
+                                                  <!-- <div class="form-group">
+                                                   <label class="control-label col-sm-2" for="name">{{'label.heading.value' | translate}}<span
+                                                      class="required">*</span></label>
+                                                      <div class="col-sm-3">
+                                                          <input type="number" id="text" name="value" onKeyPress="if(this.value.length>3) return false;"  ng-model="option.value" class="form-control"
+                                                          required late-Validate/>
+                                                      </div>
+                                                      <div class="col-sm-1">
+                                                          <form-validate valattributeform="addquestionform" valattribute="text"/>
+                                                      </div>
+                                                  </div> -->
+                                                 <!--  <div class="form-group">
+                                                        <div class="col-sm-offset-2 col-sm-6">
+                                                            <button type="button" class="btn btn-default" ng-click="discardOpt()">{{ 'label.button.cancel' | translate }}</button>
+                                                            <button type="button" class="btn btn-primary" ng-click="addOpt()"><span class="fa fa-plus"></span> {{'label.button.addoption' | translate}}</button>
+                                                        </div>
+                                                  </div> -->
+                                            </div>
+
+                                            <div class="form-group" ng-show="question.responseDatas.length>0">
+                                                  <label class="control-label col-sm-2" for=""></label>
+                                              <div class="list-group col-sm-6">
+                                                  <div class="list-group-item" ng-repeat="optionValue in question.responseDatas">
+                                                      <h4 class="list-group-item-heading">{{ optionValue.text }} 
+                                                        <span class="pull-right fa-2x fa text-danger fa-times" ng-click="deleteOption($index)"></span>
+                                                        <span class="pull-right fa-edit fa text-danger" ng-click="editOption($index)"></span>
+                                                      </h4>
+                                                      <p class="list-group-item-text">{{ 'label.heading.value' | translate}} :  {{ optionValue.value }}</p>
+                                                  </div>
+                                              </div>
+                                          </div>
+
                                         <div class="form-group">
                                             <div class="col-sm-offset-2 col-sm-6">
                                                 <button type="button" class="btn btn-default" ng-click="discardQuestion()">{{ 'label.button.cancel' | translate }}</button>
-                                                <button type="submit" class="btn btn-primary"><span class="fa fa-plus"></span> {{'label.button.addquestion' | translate}}</button>
+                                                <button type="submit" class="btn btn-primary"  ng-click="addQuestion()" ><span class="fa fa-plus"></span> {{'label.button.submit' | translate}}</button>
                                             </div>
                                         </div>
-                                        <div>
+                                        <!-- <div>
                                             <div class="toolbar">
                                                 <h3>Options</h3>
                                             </div>
@@ -129,44 +213,9 @@
                                                     <p class="list-group-item-text">{{ 'label.heading.value' | translate}} :  {{ option.value }}</p>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <div class="col-sm-10 col-sm-offset-2">
-                                                    <a class="btn btn-md btn-primary" ng-click="showOptionForm()" ng-if="showOptBtn"><span class="fa fa-plus"></span> {{'label.button.addoption' | translate}}</a>
-                                                </div>
-                                            </div>
-                                            <div class="optForm" ng-if="showOptForm">
-                                                <div class="form-group">
-                                                   <label class="control-label col-sm-4" for="name">{{'label.text' | translate}}<span
-                                                      class="required">*</span></label>
-                                                      <div class="col-sm-5">
-                                                          <input type="text" id="text" name="text" ng-model="option.text" class="form-control"
-                                                          required late-Validate/>
-                                                      </div>
-                                                      <div class="col-sm-2">
-                                                          <form-validate valattributeform="addquestionform" valattribute="text"/>
-                                                      </div>
-                                                  </div>
-                                                  <div class="form-group">
-                                                   <label class="control-label col-sm-4" for="name">{{'label.heading.value' | translate}}<span
-                                                      class="required">*</span></label>
-                                                      <div class="col-sm-5">
-                                                          <input type="number" id="text" name="value" ng-model="option.value" class="form-control"
-                                                          required late-Validate/>
-                                                      </div>
-                                                      <div class="col-sm-2">
-                                                          <form-validate valattributeform="addquestionform" valattribute="text"/>
-                                                      </div>
-                                                  </div>
-                                                  <div class="form-group">
-                                                        <div class="col-sm-offset-2 col-sm-6">
-                                                            <button type="button" class="btn btn-default" ng-click="discardOpt()">{{ 'label.button.cancel' | translate }}</button>
-                                                            <button type="button" class="btn btn-primary" ng-click="addOpt()"><span class="fa fa-plus"></span> {{'label.button.addoption' | translate}}</button>
-                                                        </div>
-                                                  </div>
-                                            </div>
-                                        </div>
+                                        </div> -->
                                     </div>    
-                                </form>                 
+                                </div>                 
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="list-group">
@@ -179,7 +228,8 @@
                         </div>
                     </div>
                 </div>
-             </div>   
-        </wz-step>
-    </wizard>     
+             </div> 
+
+
+</form>
 </div>

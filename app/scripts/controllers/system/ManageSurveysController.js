@@ -17,14 +17,27 @@
             scope.formData = {
                 questionDatas: []
             };
+
+            scope.showQuestions = false;
             resourceFactory.surveyResource.get(function(data){
                 scope.surveys = data;
             });
 
-            scope.submitDetails = function () {
+            /*scope.submitDetails = function () {    
+             console.log('out');                   
                 if (WizardHandler.wizard().getCurrentStep() != scope.noOfTabs) {
                     WizardHandler.wizard().next();
+                    console.log('in');
+
                 }
+            }*/
+            scope.showQuestionsForm = function(){
+                if(scope.formData.key != undefined && scope.formData.key.length>0 &&  
+                    scope.formData.name != undefined && scope.formData.name.length>0 && 
+                    scope.formData.countryCode != undefined && scope.formData.countryCode.length>0){
+                    scope.showQuestions = true; 
+                }
+                
             }
             scope.checkBasicDetails = function(){
                 return false;
@@ -49,6 +62,12 @@
                     scope.question.responseDatas[i].sequenceNo = i + 1;
                 }
             }
+
+            scope.editOption = function(index){
+                scope.option = scope.question.responseDatas[index];
+                scope.showOptionForm();                
+            }
+
             scope.deleteQuestion = function(index){
                 scope.formData.questionDatas.splice(index,1);
                 for (var i = 0; i < scope.formData.questionDatas.length; i++) {
@@ -67,12 +86,32 @@
 
             }
             scope.addOpt = function(){
-                scope.option.sequenceNo = scope.question.responseDatas.length + 1;
-                scope.question.responseDatas.push(scope.option);
-                scope.option = {};
-                scope.showOptForm = false;
-                scope.showOptBtn = true;
+                if(scope.isValidOption(scope.option)){
+                    if(scope.isOptionForUpdate(scope.option)){
+                        scope.updateOption(scope.option);
+                    }else{
+                        scope.option.sequenceNo = scope.question.responseDatas.length + 1;
+                        scope.question.responseDatas.push(scope.option); 
+                    }                    
+                    scope.option = {};
+                    scope.showOptForm = false;
+                    scope.showOptBtn = true;
+                }                
             }
+
+            scope.updateOption = function(data){
+                scope.question.responseDatas[data.index].text = data.text;
+                scope.question.responseDatas[data.index].value = data.value;
+            }
+
+            scope.isOptionForUpdate = function(data){
+                return (data.index != undefined);
+            }
+
+            scope.isValidOption = function(data){
+                return (data.value != undefined  && data.text != undefined && data.text.length >0);
+            }
+
             scope.addQuestion = function(){
                 if(scope.question.responseDatas.length == 0){
                     alert("Cannot add question without options");
