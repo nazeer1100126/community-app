@@ -917,6 +917,9 @@
             .when('/surveys/add',{
                 templateUrl: 'views/surveys/createsurvey.html'
             })
+            .when('/surveys/:id',{
+                templateUrl: 'views/surveys/editsurvey.html'
+            })
             .when('/editfamilymember/:clientId/:familyMemberId', {
                 templateUrl: 'views/clients/editfamilymembers.html'
             })

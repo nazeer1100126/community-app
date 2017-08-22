@@ -39,12 +39,11 @@
                     <th>{{'label.heading.name' | translate}}</th>
                     <th>{{'label.heading.description' | translate}}</th>
                     <th>{{'label.heading.countrycode' | translate}}</th>
-                    <th>{{'label.heading.status' | translate}}</th>
                 </tr>
                 </thead>
 
                 <tbody>
-                    <tr ng-repeat="survey in surveys | filter: searchText">
+                    <tr ng-repeat="survey in surveys | filter: searchText" ng-click="routeTo(survey.id)">
                         <td>{{ survey.key }}</td>
                         <td>{{ survey.name }}</td>
                         <td>{{ survey.description }}</td>

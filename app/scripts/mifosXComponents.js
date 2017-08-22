@@ -169,6 +169,7 @@ define(['Q', 'underscore', 'mifosX'], function (Q) {
             'system/AddAccountNumberPreferencesController',
             'system/EditAccountNumberPreferencesController',
             'system/ManageSurveysController',
+            'system/EditSurveyController',
             'organization/HolController',
             'organization/ViewHolController',
             'organization/EditHolidayController',

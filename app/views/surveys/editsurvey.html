@@ -1,8 +1,8 @@
-<div class="content-container" ng-controller="ManageSurveysController">
+<div class="content-container" ng-controller="EditSurveyController">
     <ul class="breadcrumb">
         <li ><a href="#/system">{{'label.anchor.system' | translate}}</a></li>
         <li ><a href="#/surveys">{{'label.anchor.managesurveys' | translate}}</a></li>
-        <li class="active">{{'label.heading.createsurvey' | translate}}</li>
+        <li class="active">{{'label.heading.editsurvey' | translate}}</li>
     </ul>   
     <form name="createsurveyform">     
         <div class="card">
@@ -10,7 +10,7 @@
                 <div novalidate="" class="card form-horizontal well" >
                    <api-validate></api-validate>
                    <fieldset>
-                    <legend>{{'label.heading.createsurvey' | translate}}</legend>
+                    <legend>{{'label.heading.survey' | translate}}</legend>
                     <div class="form-group">
                        <label class="control-label col-sm-2" for="key">{{'label.heading.key' | translate}}<span
                           class="required">*</span></label>
@@ -58,14 +58,14 @@
                 </div>
             </div>
         </div>
-            <div class="card well"  novalidate="" rc-submit="createSurvey()" ng-show="showQuestions">
+            <div class="card well"  novalidate="" rc-submit="updateSurvey()" ng-show="showQuestions">
                 <div class="card-content">
                     <legend>{{'label.heading.questions' | translate}}</legend>
                     <div class="content">
                         <br>
                         <div class="row">
                             <a class="btn btn-md btn-primary" ng-click="showQuestionForm()"><span class="fa fa-plus"></span> {{'label.button.addquestion' | translate}}</a>
-                            <a class="btn btn-md btn-primary" ng-click="createSurvey()" ng-disabled="!formData.questionDatas.length">{{'label.heading.createsurvey' | translate}}</a> 
+                            <a class="btn btn-md btn-primary" ng-click="updateSurvey()" ng-disabled="!formData.questionDatas.length">{{'label.heading.editsurvey' | translate}}</a> 
                         </div>
                         <br/>
                          <fieldset>
