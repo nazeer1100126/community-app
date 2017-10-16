@@ -18,6 +18,8 @@
             scope.showTrancheAmountTotal = 0;
             scope.processDate = false;
 
+             scope.isInterBranchTransaction = (location.search().isInterBranchSearch != undefined && location.search().isInterBranchSearch== 'true');
+
             switch (scope.action) {
                 case "approve":
                     scope.taskPermissionName = 'APPROVE_LOAN';
@@ -366,7 +368,15 @@
             }
 
             scope.cancel = function () {
-                location.path('/viewloanaccount/' + routeParams.id);
+                if(scope.isInterBranchTransaction && (scope.action=="repayment")){
+                    scope.routeToInterBranchDetails(routeParams.id);
+                }else{
+                    location.path('/viewloanaccount/' + routeParams.id);
+                }
+            };
+
+            scope.routeToInterBranchDetails = function(id){
+                location.path('/interbranchsearch').search({isInterBranchSearch:'true',searchText:location.search().searchText,officeId: location.search().officeId, 'loanId':id});
             };
 
             scope.addTrancheAmounts = function(){
@@ -423,9 +433,17 @@
                         params.transactionId = routeParams.transactionId;
                     }
                     params.loanId = scope.accountId;
-                    resourceFactory.loanTrxnsResource.save(params, this.formData, function (data) {
-                        location.path('/viewloanaccount/' + data.loanId);
-                    });
+                    if(scope.isInterBranchTransaction && scope.action == "repayment"){
+                            params.command = undefined;
+                            resourceFactory.interBranchLoanTxnsResource.repayment(params, this.formData, function (data) {                            
+                                scope.routeToInterBranchDetails(data.loanId);                                
+                            });
+                    }else{
+                            resourceFactory.loanTrxnsResource.save(params, this.formData, function (data) {
+                                location.path('/viewloanaccount/' + data.loanId);
+                            });
+                    }
+                    
                 } else if (scope.action == "deleteloancharge") {
                     resourceFactory.LoanAccountResource.delete({loanId: routeParams.id, resourceType: 'charges', chargeId: routeParams.chargeId}, this.formData, function (data) {
                         location.path('/viewloanaccount/' + data.loanId);

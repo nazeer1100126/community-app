@@ -677,6 +677,39 @@
                     }),
                     adHocQueryTemplateResource: defineResource(apiVer + "/adhocquery/template", {}, {
                         get: {method: 'GET', params: {}}
+                    }),
+                    interBranchLoanAccountResource: defineResource(apiVer + "/interbranch/loans/:loanId", {loanId: '@loanId'}, {
+                        get: {method: 'GET', params: {}}
+                    }),
+                    interBranchLoanTxnsResource: defineResource(apiVer + "/interbranch/loans/:loanId/repayment", {loanId: '@loanId'}, {
+                        repayment: {method: 'POST', params: {}}
+                    }),
+                    interBranchUndoLoanTxnsResource: defineResource(apiVer + "/interbranch/loans/:loanId/transactions/:transactionId/undo", {loanId: '@loanId',transactionId: '@transactionId'}, {
+                        undo: {method: 'POST', params: {}}
+                    }),
+                    interBranchSavingDepositResource: defineResource(apiVer + "/interbranch/savingsaccounts/:savingsId/deposit", {savingsId: '@savingsId'}, {
+                        deposit: {method: 'POST', params: {}}
+                    }),
+                    interBranchSavingWithdrawalResource: defineResource(apiVer + "/interbranch/savingsaccounts/:savingsId/withdrawal", {savingsId: '@savingsId'}, {
+                        withdrawal: {method: 'POST', params: {}}
+                    }),
+                    interBranchUndoSavingTransactionResource: defineResource(apiVer + "/interbranch/savingsaccounts/:savingsId/transactions/:transactionId/undo", {savingsId: '@savingsId',transactionId: '@transactionId'}, {
+                        undo: {method: 'POST', params: {}}
+                    }),
+                    interBranchSavingAccountResource: defineResource(apiVer + "/interbranch/savingsaccounts/:accountId", {accountId: '@accountId'}, {
+                        get: {method: 'GET', params: {}}
+                    }),
+                    interBranchTransferResource: defineResource(apiVer + "/interbranch/accounttransfers", {}, {
+                        transfer: {method: 'POST', params: {}}
+                    }),
+                    interBranchTransferTemplateResource: defineResource(apiVer + "/interbranch/accounttransfers/template", {}, {
+                        get: {method: 'GET', params: {}}
+                    }),
+                    interBranchClientsResource: defineResource(apiVer + "/interbranch/clients/:clientId", {clientId: '@clientId'}, {
+                        get: {method: 'GET', params: {}}
+                    }),
+                    interBranchClientAccountResource: defineResource(apiVer + "/interbranch/clients/:clientId/account", {clientId: '@clientId'}, {
+                        get: {method: 'GET', params: {}}
                     })
                 };
             }];

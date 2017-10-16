@@ -4301,5 +4301,27 @@
     "error.msg.survey.duplicate.key" : "Survey is already exist with key : `{{params[0].value}}` ",
     "label.heading.deactivated" : "Deactivated",
     "label.button.deactivate" : "Deactivate",
-    "error.msg.survey.cannot.be.modified.as.used.in.client.survey" : "Survey can not be modified , it has been used in client survey"
+    "error.msg.survey.cannot.be.modified.as.used.in.client.survey" : "Survey can not be modified , it has been used in client survey",
+
+    "interbranchsavingtransaction" : "Inter Branch Saving Transaction",
+    "interbranchloantransaction" : "Inter Branch Loan Transaction",
+    "label.anchor.inter.branch.search.details" : "Inter Branch Search Details",
+    "label.heading.loan.account.search.result" : "Loan Account Search Result",
+    "label.heading.saving.account.search.result" : "Saving Account Search Result",
+    "label.heading.client.search.result" : "Client Search Result",
+    "label.heading.savingaccountnumber" : "Saving Account Number",
+    "error.msg.saving.account.id.invalid" : "Invalid saving account ",
+    "label.heading.savingaccountdetails" : "Saving Account Details",
+    "label.anchor.view.loan.account.details" : "View Loan Account Details",
+    "label.anchor.view.saving.account.details" : "View Saving Account Details",
+    "label.heading.inter.branch.transactions" : "Inter Branch Transactions",
+    "label.heading.search.and.process.inter.branch.transactions" : "Search And Process Inter Branch Transactions",
+    "label.anchor.collections" : "Collections",
+    "label.anchor.inter.branch.client.transaction" : "Inter Branch Client Transaction",
+    "error.msg.saving.account.transfer.transaction.update.not.allowed" : "Saving account transfer transaction update is not allowed",
+    "label.heading.initiatedat" : "Initiated At",
+    "label.heading.loanaccountnumber" : "Loan Account Number",
+    "label.heading.clientaccountnumber" : "Client Account Number",
+    "error.msg.productToAccountMapping.not.found" : "Product to account mapping not found",
+    "label.input.transfer.amount" : "Transfer Amount"
 }
