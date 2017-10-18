@@ -38,6 +38,8 @@
         </fieldset>
     </form>
 
+
+
     <!-- loan data results -->
     <div class="card" ng-show="loanResults.length>0 && view==searchView" has-permission="READ_INTER_BRANCH_LOAN_DETAILS">
         <div>
@@ -106,35 +108,68 @@
         </table>
     </div>
 
-    <!-- loan account start -->
-    <div class="card" ng-show="view==loanView" has-permission="READ_INTER_BRANCH_LOAN_DETAILS">
-        <br/>
-                <table  class="table well" border="2">
-                     <thead>
-                        <tr class="graybg">
-                            <td colspan="2">{{'label.heading.clientdetails' | translate}}</td>   
-                        </tr>
-                    </thead>
-                    <tbody>                            
-                            <tr>
-                                <td>{{'label.heading.name' | translate}}</td>
-                                <td>{{loandetails.clientName}}</td>    
-                            </tr> 
-                            <tr>
-                                <td>{{'label.heading.clientaccountnumber' | translate}}</td>
-                                <td>{{loandetails.clientAccountNo}}</td>    
-                            </tr> 
-                            <tr>
-                                <td>{{'label.heading.office' | translate}}</td>
-                                <td>{{loandetails.clientOfficeName}}</td>    
-                            </tr>
-                            <tr>
-                                <td>{{'label.heading.loanaccountnumber' | translate}}</td>
-                                <td>{{loandetails.accountNo}}</td>    
-                            </tr> 
-                    </tbody>            
-                </table>
-    </div> 
+    <div class="card col-sm-12" ng-hide="view==searchView">
+        <!-- loan account start -->
+            <div class="col-sm-5">
+                <br/>
+                        <table  class="table well" border="2">
+                             <thead>
+                                <tr class="graybg">
+                                    <td colspan="2">{{'label.heading.clientdetails' | translate}}</td>   
+                                </tr>
+                            </thead>
+                            <tbody>                            
+                                    <tr>
+                                        <td>{{'label.heading.name' | translate}}</td>
+                                        <td>{{clientBasicDetails.displayName}}</td>    
+                                    </tr> 
+                                    <tr>
+                                        <td>{{'label.heading.clientaccountnumber' | translate}}</td>
+                                        <td>{{clientBasicDetails.accountNo}}</td>    
+                                    </tr> 
+                                    <tr>
+                                        <td>{{'label.heading.office' | translate}}</td>
+                                        <td>{{clientBasicDetails.officeName}}</td>    
+                                    </tr>
+                                    <tr>
+                                        <td ng-show="view == loanView">{{'label.heading.loanaccountnumber' | translate}}</td>
+                                        <td ng-show="view != loanView">{{'label.heading.savingaccountnumber' | translate}}</td>
+                                        <td>{{clientBasicDetails.account}}</td>    
+                                    </tr>
+                            </tbody>            
+                        </table>
+            </div> 
+            <div class="col-sm-7">
+                <br/>
+                        <table  class="table well" border="2">
+                            <tbody>                          
+                                    <tr>
+                                        <td style="width:40%">{{'label.heading.clientimage' | translate}}</td>
+                                        <td ng-hide="clientBasicDetails.image == null"><img  data-ng-click="showPicture()" ng-src="{{clientBasicDetails.image}}" style="max-height:250px;max-width:250px;" alt="Avatar" title="{{'label.zoom' | translate}}"></td>  
+                                        <td ng-show="clientBasicDetails.image == null">{{'label.not.available' | translate}}</td>  
+                                    </tr> 
+                                    <tr>
+                                        <td style="width:40%">
+                                            {{'label.heading.clientsignature' | translate}}
+                                            <div>
+                                                <button class="btn btn-xs btn-primary" ng-click="viewSignature = !viewSignature">
+                                                    <i ng-show="!viewSignature">{{'label.button.view' | translate}}</i>
+                                                    <i ng-show="viewSignature">{{'label.button.hide' | translate}}</i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                        <td>                                            
+                                            <div class="show-large-picture center" ng-show="viewSignature">
+                                                <img ng-src="{{clientBasicDetails.signature}}" style="max-height:300px;max-width:300px;" alt="Avatar" title="{{'label.zoom' | translate}}">
+                                            </div>
+                                        </td>    
+                                    </tr> 
+                            </tbody>            
+                        </table>
+            </div>
+    </div>
+
+    
 
     <div class="card graybg col-sm-12" ng-show="view==loanView" has-permission="READ_INTER_BRANCH_LOAN_DETAILS">
         <button class="btn btn-primary col-sm-offset-6 pull-left" ng-show="loandetails.id" ng-click="makePayment(loandetails.id)"  
@@ -364,41 +399,67 @@
                         </uib-tab>
                     </uib-tabset>
         </div>
-     </div>       
+    </div>       
 
-     <!-- loan account end -->    
+     <!-- loan account end -->  
+      <div class="card paddedleft col-sm-12" ng-if="view== fundTransferView" has-permission="INTERBRANCH_TRANSFER_SAVINGSACCOUNT">
+                <api-validate></api-validate>
+                <form class=" card form-horizontal" name="accounttransferform" autocomplete="off" novalidate="" rc-submit="submitFundTransfer()">
+                    <br>
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="toAccountId">{{ 'label.input.account' | translate }}<span class="required">*</span></label>
 
-    <!-- saving accounts starts -->
-    
-    <div class="card col-md-6"  ng-show="view== savingView || view== fundTransferView" has-permission="READ_INTER_BRANCH_SAVING_DETAILS">
-        <br/>
-                    <table  class="table well" border="2">
-                       <thead>
-                         <tr class="graybg">
-                            <td colspan="2">{{'label.heading.clientdetails' | translate}}</td>   
-                        </tr>
-                    </thead>
-                    <tbody>                            
-                        <tr>
-                            <td>{{'label.heading.name' | translate}}</td>
-                            <td>{{savingaccountdetails.clientName}}</td>    
-                        </tr> 
-                        <tr>
-                            <td>{{'label.heading.clientaccountnumber' | translate}}</td>
-                            <td>{{savingaccountdetails.clientAccountNumber}}</td>    
-                        </tr> 
-                        <tr>
-                            <td>{{'label.heading.office' | translate}}</td>
-                            <td>{{savingaccountdetails.clientOfficeName}}</td>    
-                        </tr>  
-                        <tr>
-                            <td>{{'label.heading.savingaccountnumber' | translate}}</td>
-                            <td>{{savingaccountdetails.accountNo}}</td>    
-                        </tr>  
-                    </tbody>
-            
-                    </table>
-    </div>
+                            <div class="col-sm-3">
+                                <select id="toAccountId" ng-model="transferData.toAccountId" name="accountnumber" class="form-control" ng-options="toAccount.id as (toAccount.productName+' - '+toAccount.accountNo) for toAccount in toAccounts" value="{{toAccount.id}}" required>
+                                    <option value="">{{'label.selectone' | translate}}</option>
+                                </select>
+                                
+                            </div>
+                            <div class="col-sm-3">
+                                <form-validate valattributeform="accounttransferform" valattribute="accountnumber" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="transferDate">{{ 'label.input.transactiondate' | translate }}<span class="required">*</span></label>
+
+                            <div class="col-sm-3">
+                                <input type="text" id="transferDate" datepicker-pop="dd MMMM yyyy" ng-model="transferData.transferDate" class="form-control" is-open="opened" min="'2000-01-01'" max="restrictDate" />
+                            </div>                    
+                            <div class="col-sm-3">
+                                <form-validate valattributeform="accounttransferform" valattribute="transferDate" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="transferAmount">{{ 'label.input.transfer.amount' | translate }}<span class="required">*</span></label>
+
+                            <div class="col-sm-3">
+                                <input type="text" id="transferAmount" number-format name="transferAmount" ng-model="transferData.transferAmount" class="form-control" required late-validate/>
+                            </div>
+                            <div class="col-sm-3">
+                                <form-validate valattributeform="accounttransferform" valattribute="transferAmount" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="transferDescription">{{ 'label.input.description' | translate }}<span class="required">*</span></label>
+
+                            <div class="col-sm-3">
+                                <textarea type="text" id="transferDescription" name="transferDescription" class="form-control" rows="2" ng-model="transferData.transferDescription" required late-validate></textarea>
+                            </div>
+                            <div class="col-sm-3">
+                                <form-validate valattributeform="accounttransferform" valattribute="transferDescription" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-offset-3">
+                            <a id="cancel" class="btn btn-default" data-ng-click="setView(savingView)">{{ 'label.button.cancel' | translate }}</a>
+                            <button id="save" type="submit" class="btn btn-primary" has-permission='INTERBRANCH_TRANSFER_SAVINGSACCOUNT'>{{ 'label.button.save' | translate }}</button>
+                        </div>
+                     </fieldset>
+                </form>
+                <br>
+    </div>   
+
     <div class="card col-sm-12" ng-show="view==savingView" has-permission="READ_INTER_BRANCH_SAVING_DETAILS">
             <button class="btn btn-primary col-sm-offset-6  pull-left" ng-show="savingaccountdetails.id" ng-click="deposit(savingaccountdetails.id)" has-permission="INTERBRANCH_DEPOSIT_SAVINGSACCOUNT">{{'label.button.deposit'  | translate}}</button>
             <button class="btn btn-primary pull-left col-sm-offset-1" ng-show="savingaccountdetails.id" ng-click="withdrawal(savingaccountdetails.id)" has-permission="INTERBRANCH_WITHDRAWAL_SAVINGSACCOUNT">{{'label.button.withdraw'  | translate}}</button>
@@ -622,7 +683,7 @@
                         </thead>
                         <tbody>
                         <tr class="pointer-main" ng-hide="transaction.reversed"
-                            ng-repeat="transaction in savingaccountdetails.transactions">
+                            ng-repeat="transaction in savingaccountdetails.transactions"   select="convertDateArrayToObject('date')">
                             <td class="pointer"
                                 data-ng-click="routeTo(transaction.accountId,transaction.id,transaction.transfer,transaction.transfer.id)">
                                 {{transaction.id}}
@@ -655,7 +716,7 @@
                                 </div>
                             </td>
                             <td> 
-                                <button class="btn btn-danger"  ng-click="undoSavingTransaction(savingaccountdetails.id, transaction.id)">
+                                <button ng-hide="transaction.transactionType.code == 'savingsAccountTransactionType.interestPosting'" class="btn btn-danger"  ng-click="undoSavingTransaction(savingaccountdetails.id, transaction.id)">
                                     {{'label.button.undo' | translate}}
                                 </button>
                             </td>
@@ -664,69 +725,113 @@
                     </table>
                 </uib-tab>
 
+                <uib-tab ng-show="savingaccountdetails.charges.length>0"  heading="{{'label.heading.charges' | translate}}">
+                        <br>
+                        <table class="table width100">
+                            <tr class="graybg">
+                                <th>{{'label.heading.name' | translate}}</th>
+                                <th>{{'label.heading.feeorpenalty' | translate}}</th>
+                                <th></th>
+                                <th>{{'label.heading.paymentdueat' | translate}}</th>
+                                <th></th>
+                                <th>{{'label.heading.dueasof' | translate}}</th>
+                                <th>{{'label.heading.repeatson' | translate}}</th>
+                                <th>{{'label.heading.calculationtype' | translate}}</th>
+                                <th></th>
+                                <th>{{'label.heading.due' | translate}}</th>
+                                <th>{{'label.heading.paid' | translate}}</th>
+                                <th>{{'label.heading.waived' | translate}}</th>
+                                <th>{{'label.heading.outstanding' | translate}}</th>
+                                <th></th>
+                                <th>{{'label.heading.actions' | translate}}</th>
+                                <th></th>
+                            </tr>
+                            <tr class="pointer-main"
+                                ng-repeat="charge in savingaccountdetails.charges | filter:{isActive:showActiveCharges}">
+                                <td class="pointer">{{charge.name}}</td>
+                                <td class="pointer"  ng-show="'charge.penalty'==true">{{"penalty"}}
+                                </td>
+                                <td class="pointer" ng-hide="'charge.penalty'==true">{{"fee"}}
+                                </td>
+                                <td class="pointer"></td>
+                                <td class="pointer">
+                                    {{charge.chargeTimeType.value}}
+                                </td>
+                                <td class="pointer"></td>
+                                <td class="pointer">{{charge.dueDate |
+                                    DateFormat}}
+                                </td>
+                                <td class="pointer">{{charge.feeOnMonthDay |
+                                    DayMonthFormat}}
+                                </td>
+                                <td class="pointer">
+                                    {{charge.chargeCalculationType.value}}
+                                </td>
+                                <td class="pointer"></td>
+                                <td class="pointer">
+                                    {{charge.currency.displaySymbol}}{{charge.amount| number}}
+                                </td>
+                                <td class="pointer">
+                                    {{charge.currency.displaySymbol}}{{charge.amountPaid| number}}
+                                </td>
+                                <td class="pointer">
+                                    {{charge.currency.displaySymbol}}{{charge.amountWaived| number}}
+                                </td>
+                                <td class="pointer">
+                                    {{charge.currency.displaySymbol}}{{charge.amountOutstanding| number}}
+                                </td>
+                                <td class="pointer"></td>
+                                <td>                                
+                                    <span >
+                                        <span ng-hide="charge.amountOutstanding == 0">
+                                            <button class="btn btn-primary pull-left col-sm-offset-1" has-permission="PAY_SAVINGSACCOUNTCHARGE" ng-show="savingaccountdetails.id" ng-click="getPayCharge(savingaccountdetails.id,charge)" has-permission="INTERBRANCH_TRANSFER_SAVINGSACCOUNT">{{'label.button.paycharge'  | translate}}</button>
+                                        </span>
+                                    </span>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </uib-tab>
+
          </uib-tabset>
     </div> 
         <!-- saving account ends -->
 
         <!-- fund transfer start-->
 
-    <div class="card paddedleft col-sm-12" ng-if="view== fundTransferView" has-permission="INTERBRANCH_TRANSFER_SAVINGSACCOUNT">
-                <api-validate></api-validate>
-                <form class=" card form-horizontal" name="accounttransferform" autocomplete="off" novalidate="" rc-submit="submitFundTransfer()">
-                    <br>
-                    <fieldset>
-                        <div class="form-group">
-                            <label class="control-label col-sm-2" for="toAccountId">{{ 'label.input.account' | translate }}<span class="required">*</span></label>
+      <div class = "card col-sm-12" ng-show= "view==payChargeView">
+        <api-validate></api-validate>
+        <legend>{{ 'label.heading.paycharge' | translate}}</legend>
+                <form class=" card form-horizontal" name="payChargeform" autocomplete="off" novalidate="" rc-submit="payCharge()">
 
-                            <div class="col-sm-3">
-                                <select id="toAccountId" ng-model="transferData.toAccountId" name="accountnumber" class="form-control" ng-options="toAccount.id as (toAccount.productName+' - '+toAccount.accountNo) for toAccount in toAccounts" value="{{toAccount.id}}" required>
-                                    <option value="">{{'label.selectone' | translate}}</option>
-                                </select>
-                                
-                            </div>
-                            <div class="col-sm-3">
-                                <form-validate valattributeform="accounttransferform" valattribute="accountnumber" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-2" for="transferDate">{{ 'label.input.transactiondate' | translate }}<span class="required">*</span></label>
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="amount">{{ 'label.input.amount' |
+                        translate}}<span class="required">*</span></label>
 
-                            <div class="col-sm-3">
-                                <input type="text" id="transferDate" datepicker-pop="dd MMMM yyyy" ng-model="transferData.transferDate" class="form-control" is-open="opened" min="'2000-01-01'" max="restrictDate" />
-                            </div>                    
-                            <div class="col-sm-3">
-                                <form-validate valattributeform="accounttransferform" valattribute="transferDate" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-2" for="transferAmount">{{ 'label.input.transfer.amount' | translate }}<span class="required">*</span></label>
+                    <div class="col-sm-3">
+                        <input id="amount" type="text" name="amount"
+                               ng-model="payChargeData.amount" class="form-control" number-format required late-Validate/>
+                    </div>
+                    <div class="col-sm-3">
+                        <form-validate valattributeform="payChargeform" valattribute="amount"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="dueDate">{{'label.heading.transactiondate' | translate}}<span
+                            class="required">*</span></label>
 
-                            <div class="col-sm-3">
-                                <input type="text" id="transferAmount" number-format name="transferAmount" ng-model="transferData.transferAmount" class="form-control" required late-validate/>
-                            </div>
-                            <div class="col-sm-3">
-                                <form-validate valattributeform="accounttransferform" valattribute="transferAmount" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-2" for="transferDescription">{{ 'label.input.description' | translate }}<span class="required">*</span></label>
-
-                            <div class="col-sm-3">
-                                <textarea type="text" id="transferDescription" name="transferDescription" class="form-control" rows="2" ng-model="transferData.transferDescription" required late-validate></textarea>
-                            </div>
-                            <div class="col-sm-3">
-                                <form-validate valattributeform="accounttransferform" valattribute="transferDescription" />
-                            </div>
-                        </div>
-
-                        <div class="col-md-offset-3">
-                            <a id="cancel" class="btn btn-default" data-ng-click="setView(savingView)">{{ 'label.button.cancel' | translate }}</a>
-                            <button id="save" type="submit" class="btn btn-primary" has-permission='INTERBRANCH_TRANSFER_SAVINGSACCOUNT'>{{ 'label.button.save' | translate }}</button>
-                        </div>
-                     </fieldset>
-                </form>
+                    <div class="col-sm-3">
+                        <input id="dueDate" type="text" sort datepicker-pop="dd MMMM yyyy"
+                               ng-model="payChargeData.dueDate" is-open="opened" min="minDate" max="restrictDate" class="form-control"/>
+                    </div>
+                </div>
+                <div class="col-md-offset-3">
+                    <button id="cancel" ng-click="setView(savingView)" class="btn btn-default">{{ 'label.button.cancel' | translate }}</button>
+                    <button id="save" type="submit" has-permission='INTERBRANCH_PAY_SAVINGSACCOUNTCHARGE' class="btn btn-primary">{{ 'label.button.paycharge' | translate }}</button>
+                </div>
                 <br>
-        </div>    
+                </form>    
+      <div>
 
         <!-- fund transfer ends -->
    </div>     

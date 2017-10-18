@@ -1,6 +1,6 @@
 (function (module) {
     mifosX.controllers = _.extend(module, {
-        SearchDetailsController: function (scope, resourceFactory, location, routeParams, dateFilter, routeParams) {
+        SearchDetailsController: function (scope, resourceFactory, location, routeParams, dateFilter, API_VERSION, $rootScope, http) {
             scope.offices = [];
             scope.formData = {};
             scope.resource = "clientIdentifiers,clients,loans,savings";
@@ -10,6 +10,7 @@
             scope.searchView = "SEARCH";  
             scope.savingView = "SAVING";  
             scope.loanView = "LOAN";
+            scope.payChargeView = "PAYCHARGE";
             scope.clientEntityType = 'CLIENT';
             scope.clientIdentifierEntityType = 'CLIENTIDENTIFIER';
             scope.view = scope.searchView;
@@ -21,6 +22,10 @@
             scope.loanAccountType = 1;
             scope.toAccounts = [];
             scope.transferData = {};
+            scope.viewSignature = false;
+            scope.clientBasicDetails = {};
+            scope.payChargeData = {locale : scope.optlang.code,dateFormat : scope.df};
+            scope.payChargeParam = {};
 
 
             if(scope.$parent.currentSession != undefined && scope.$parent.currentSession.user != undefined){
@@ -42,6 +47,15 @@
                  }
             }; 
 
+
+
+            scope.convertDateArrayToObject = function(dateFieldName){
+
+                for(var i in scope.savingaccountdetails.transactions){
+                    scope.savingaccountdetails.transactions[i][dateFieldName] = new Date(scope.savingaccountdetails.transactions[i].date);
+                }
+            };
+
             scope.getAllOffices = function(){
             	resourceFactory.officeResource.getAllOffices({includeAllOffices:true},{}, function (data) {
 	            	scope.offices = data;
@@ -51,6 +65,7 @@
             };  
 
             scope.getDetails = function(){
+                scope.clientBasicDetails = {};
             	resourceFactory.globalSearch.search({query:scope.formData.searchText,resource : scope.resource, officeId: scope.formData.officeId,isInterBranchSearch:true},{}, function (data) {
 	            	scope.constructData(data);
 	            });
@@ -148,6 +163,52 @@
             	}
             };
 
+            scope.getClientBasicDetails = function(clientId,account){
+                scope.viewSignature = false;
+                scope.clientBasicDetails = {};
+                resourceFactory.interBranchClientBasicDetailsResource.get({clientId: clientId},function (clientData) {
+                    scope.clientBasicDetails = clientData;
+                    scope.clientBasicDetails.account = account;
+                    console.log();
+                    if(clientData.imagePresent){
+                        console.log('if');
+                        http({
+                            method: 'GET',
+                            url: $rootScope.hostUrl + API_VERSION + '/clients/' + clientId + '/images?maxHeight=150'
+                        }).then(function (imageData) {
+                            scope.clientBasicDetails.image = imageData.data;
+                        });
+                    }else{
+                        scope.clientBasicDetails.image = null;
+                    }
+
+                    scope.clientBasicDetails.isSignaturePresent = false;
+
+                    http({
+                        method: 'GET',
+                        url: $rootScope.hostUrl + API_VERSION + '/clients/' + clientId + '/documents'
+                    }).then(function (docsData) {
+                        var docId = -1;
+                        for (var i = 0; i < docsData.data.length; ++i) {
+                            if (docsData.data[i].name == 'clientSignature') {
+                                docId = docsData.data[i].id;
+                                scope.signature_url = $rootScope.hostUrl + API_VERSION + '/clients/' + clientId + '/documents/' + docId + '/attachment?tenantIdentifier=' + $rootScope.tenantIdentifier;
+                                scope.clientBasicDetails.isSignaturePresent = true;
+                                http({
+                                    method: 'GET',
+                                    url: $rootScope.hostUrl + API_VERSION + '/clients/' + clientId + '/documents/' + docId + '/attachment?tenantIdentifier=' + $rootScope.tenantIdentifier
+                                }).then(function (docsData) {
+                                    scope.clientBasicDetails.signature = scope.signature_url;
+                                });
+                            }
+                        }
+                    });
+
+                    console.log('scope.clientBasicDetails : ',scope.clientBasicDetails);
+                });
+            }
+
+            
 
             scope.getClientLoanAndSavingAccount = function(data, type){
                 var id = '';
@@ -193,19 +254,30 @@
             	location.path(uri).search({isInterBranchSearch:'true',searchText:scope.formData.searchText,officeId: scope.formData.officeId});
             };
 
+
+            scope.showSignature = function()
+            {
+                $uibModal.open({
+                    templateUrl: 'clientSignature.html',
+                    controller: ViewLargerClientSignature,
+                    size: "lg"
+                });
+            };
+
             scope.getAccount = function(id,type){
             	if(type ==scope.loanView){
             		resourceFactory.interBranchLoanAccountResource.get({loanId: id}, function (data) {
                         scope.view = type;
             			scope.loandetails = data;
                         scope.loandetails.transactions =  _.sortBy(scope.loandetails.transactions, 'id').reverse();
+                        scope.getClientBasicDetails(data.clientId, data.accountNo);         
             		 });
 
             	}else{
                     resourceFactory.interBranchSavingAccountResource.get({accountId: id}, function (data) {
                         scope.view = type;
                         scope.savingaccountdetails = data;
-                        scope.savingaccountdetails.transactions =  _.sortBy(scope.savingaccountdetails.transactions, 'id').reverse();
+                        scope.getClientBasicDetails(data.clientId, data.accountNo);  
                     });  
             	}
             };
@@ -307,9 +379,24 @@
                     });
                 });
             };
+
+            scope.getPayCharge = function(savingsId,charge){
+                scope.view = scope.payChargeView;
+                scope.payChargeData.dueDate = new Date();
+                scope.payChargeData.amount = charge.amountOutstanding;
+                scope.payChargeParam.savingsAccountId = savingsId;
+                scope.payChargeParam.savingsAccountChargeId = charge.id;
+            };
+
+            scope.payCharge = function(){
+                scope.payChargeData.dueDate = dateFilter(scope.payChargeData.dueDate , scope.df);
+                resourceFactory.interBranchPayChargeResource.pay(scope.payChargeParam, scope.payChargeData, function (data) {
+                        scope.getAccount(scope.payChargeParam.savingsAccountId,scope.savingView);
+                });
+            };
         }
     });
-    mifosX.ng.application.controller('SearchDetailsController', ['$scope', 'ResourceFactory', '$location', '$routeParams', 'dateFilter', '$routeParams', mifosX.controllers.SearchDetailsController]).run(function ($log) {
+    mifosX.ng.application.controller('SearchDetailsController', ['$scope', 'ResourceFactory', '$location', '$routeParams', 'dateFilter', 'API_VERSION', '$rootScope', '$http', mifosX.controllers.SearchDetailsController]).run(function ($log) {
         $log.info("SearchDetailsController initialized");
     });
 }(mifosX.controllers || {}));

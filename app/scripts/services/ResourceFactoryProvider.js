@@ -710,6 +710,12 @@
                     }),
                     interBranchClientAccountResource: defineResource(apiVer + "/interbranch/clients/:clientId/account", {clientId: '@clientId'}, {
                         get: {method: 'GET', params: {}}
+                    }),
+                    interBranchClientBasicDetailsResource: defineResource(apiVer + "/interbranch/clients/:clientId/basicdetails", {clientId: '@clientId'}, {
+                        get: {method: 'GET', params: {}}
+                    }),
+                    interBranchPayChargeResource: defineResource(apiVer + "/interbranch/savingsaccounts/:savingsAccountId/charges/:savingsAccountChargeId/pay", {savingsAccountId: '@savingsAccountId',savingsAccountChargeId: '@savingsAccountChargeId'}, {
+                        pay: {method: 'POST', params: {}}
                     })
                 };
             }];

@@ -629,6 +629,7 @@
     "label.heading.deleteclientimage":"Delete Client Image",
     "label.heading.selectclientsignature":"Select Client Signature",
     "label.heading.clientsignature":"Client Signature",
+    "label.heading.clientimage" : "Client Image",
     "label.heading.clientscreenreport":"Client Screen Report",
     "label.heading.clientno":"Client #",
     "label.heading.clientclosed":"Client Closed",
@@ -4323,5 +4324,8 @@
     "label.heading.loanaccountnumber" : "Loan Account Number",
     "label.heading.clientaccountnumber" : "Client Account Number",
     "error.msg.productToAccountMapping.not.found" : "Product to account mapping not found",
-    "label.input.transfer.amount" : "Transfer Amount"
+    "label.input.transfer.amount" : "Transfer Amount",
+    "label.not.available" : "Not Available",
+    "label.button.hide" : "Hide",
+    "label.heading.paycharge" : "Pay Charge"
 }
