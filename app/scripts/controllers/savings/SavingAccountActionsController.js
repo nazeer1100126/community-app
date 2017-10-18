@@ -13,6 +13,9 @@
             scope.showPaymentDetails = false;
             scope.paymentTypes = [];
 
+            scope.isInterBranchTransaction = (location.search().isInterBranchSearch != undefined && location.search().isInterBranchSearch== 'true');
+          
+
             switch (scope.action) {
                 case "approve":
                     scope.title = 'label.heading.approvesavingaccount';
@@ -205,7 +208,15 @@
             }
 
             scope.cancel = function () {
-                location.path('/viewsavingaccount/' + routeParams.id);
+                if(scope.isInterBranchTransaction && (scope.action=="deposit" || scope.action=="withdrawal")){
+                    scope.routeToInterBranchDetails(routeParams.id);
+                }else{
+                    location.path('/viewsavingaccount/' + routeParams.id);
+                }                
+            };
+
+            scope.routeToInterBranchDetails = function(id){
+                location.path('/interbranchsearch').search({isInterBranchSearch:'true',searchText:location.search().searchText,officeId: location.search().officeId, 'savingId':id});
             };
 
             scope.submit = function () {
@@ -238,10 +249,25 @@
                         this.formData.isPostInterestAsOn=true;
                     }
                     params.savingsId = scope.accountId;
+                    if(scope.isInterBranchTransaction){
+                        params.command = undefined;
+                        if(scope.action == "withdrawal"){
+                            resourceFactory.interBranchSavingWithdrawalResource.withdrawal(params, this.formData, function (data) {
+                                scope.routeToInterBranchDetails(data.savingsId);                                
+                            });
+                        }else if(scope.action == "deposit"){
+                            resourceFactory.interBranchSavingDepositResource.deposit(params, this.formData, function (data) {
+                                scope.routeToInterBranchDetails(data.savingsId); 
+                            });
+                        }
+                        
+                    }else{
+                        resourceFactory.savingsTrxnsResource.save(params, this.formData, function (data) {
+                            location.path('/viewsavingaccount/' + data.savingsId);
+                        });
+                    }
 
-                    resourceFactory.savingsTrxnsResource.save(params, this.formData, function (data) {
-                        location.path('/viewsavingaccount/' + data.savingsId);
-                    });
+                    
                 } else if (scope.action == "editsavingcharge") {
                     if (this.formData.feeOnMonthDayFullDate) {
                         this.formData.feeOnMonthDay = dateFilter(this.formData.feeOnMonthDayFullDate, scope.df);
