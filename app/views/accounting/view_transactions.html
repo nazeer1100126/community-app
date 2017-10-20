@@ -145,8 +145,8 @@
                     <div class="col-md-12">
                         <table class="table">
                             <tr>
-                                <td class="width14"><label>{{'label.input.office' | translate}}</label></td>
-                                <td class="width36">{{transactions[0].officeName}}</td>
+                                <td class="width14"></td>
+                                <td class="width36"></td>
                                 <td class="width19"><label>{{'label.input.transactiondate' | translate}}</label></td>
                                 <td class="width31">{{transactions[0].transactionDate | DateFormat}}</td>
                             </tr>
@@ -163,6 +163,7 @@
                             <thead>
                             <tr class="graybg">
                                 <th>{{'label.heading.entryid' | translate}}</th>
+                                <th>{{'label.input.office' | translate}}</th>
                                 <th>{{'label.heading.type' | translate}}</th>
                                 <th>{{'label.heading.account' | translate}}</th>
                                 <th>{{'label.heading.debit' | translate}}</th>
@@ -172,6 +173,7 @@
                             <tbody>
                             <tr class="pointer-main" ng-repeat="transaction in transactions">
                                 <td class="pointer" data-ng-click="showTransaction(transaction)">{{transaction.id}}</td>
+                                <td class="pointer" data-ng-click="showTransaction(transaction)">{{transaction.officeName}}</td>
                                 <td class="pointer" data-ng-click="showTransaction(transaction)">{{transaction.glAccountType.value}}</td>
                                 <td class="pointer" data-ng-click="showTransaction(transaction)">{{transaction.glAccountName}}({{transaction.glAccountCode}})</td>
                                 <td class="pointer" data-ng-click="showTransaction(transaction)">

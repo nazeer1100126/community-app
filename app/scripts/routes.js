@@ -944,6 +944,9 @@
             .when('/editadhocquery/:id', {
                 templateUrl: 'views/adhocquery/editadhocquery.html'
             })
+            .when('/interbranchsearch', {
+                templateUrl: 'views/interbranch/search-details.html'
+            })
             ;
         $locationProvider.html5Mode(false);
     };

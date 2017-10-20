@@ -3,6 +3,9 @@
         EditFinancialActivityMappingController: function (scope, resourceFactory, location,routeParams) {
             scope.formData = {};
             scope.accountOptions = [];
+            scope.interBranchLoanTransaction = 105;
+            scope.interBranchSavingsTransaction = 106;
+
             resourceFactory.officeToGLAccountMappingResource.withTemplate({mappingId: routeParams.mappingId},function (data) {
                 scope.mapping = data;
                 scope.glAccountOptions = data.glAccountOptions;
@@ -13,7 +16,7 @@
             });
 
             scope.updateActivityOptions = function(activityId){
-                if(activityId === 100 || activityId === 101 || activityId === 102 || activityId === 103){
+                if(activityId === 100 || activityId === 101 || activityId === 102 || activityId === 103 || activityId === scope.interBranchLoanTransaction || activityId === scope.interBranchSavingsTransaction){
                     scope.accountOptions = scope.glAccountOptions.assetAccountOptions;
                 }else if(activityId === 200 || activityId === 201){
                     scope.accountOptions = scope.glAccountOptions.liabilityAccountOptions;

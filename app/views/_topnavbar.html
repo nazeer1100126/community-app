@@ -66,6 +66,15 @@
                             translate }}</a></li>
                     </ul>
                 </li>
+                <li class="" uib-dropdown id="preview-menu">
+                    <a class="" uib-dropdown-toggle data-toggle="uib-dropdown"
+                       ng-class="{ activate: isActive('collections') }" href><i class="fa fa-users"></i> {{
+                        'label.anchor.collections' | translate }}<b class="caret"></b></a>
+                    <ul class="" uib-dropdown-menu>
+                        <li><a href="#/interbranchsearch">{{ 'label.anchor.inter.branch.client.transaction' | translate }}</a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
             <ul class="nav navbar-nav navbar-right" id="main-menu-right">
                 <li class="" uib-dropdown id="notification-icon" ng-controller="NotificationsController">
