@@ -208,6 +208,17 @@
                                 <li><a href="#/templates" has-permission='READ_TEMPLATE'>{{ 'label.anchor.templates' | translate }}</a></li>
                             </ul>
                         </li>
+                        <li class="dropdown" id="preview-menu">
+                            <a class="dropdown-toggle" data-toggle="dropdown" ng-class="{ activate: isActive('collections') }" href="#"><i class="icon-wrench"></i> {{'label.anchor.collections' | translate }}<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#/interbranchsearch">{{ 'label.anchor.inter.branch.client.transaction' | translate }}
+                                </a>
+                            </li>
+                        </li>
+                            </ul>
+                        </li>
+
+
                 	</ul>
                     <ul class="nav navbar-nav navbar-right" id="main-menu-right">
                         <li class="dropdown" id="user-menu">
