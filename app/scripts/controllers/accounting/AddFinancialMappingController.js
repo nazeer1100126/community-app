@@ -2,6 +2,8 @@
     mifosX.controllers = _.extend(module, {
         AddFinancialMappingController: function (scope, resourceFactory, location) {
             scope.formData = {};
+            scope.interBranchLoanTransaction = 105;
+            scope.interBranchSavingsTransaction = 106;
 
             resourceFactory.officeToGLAccountMappingResource.get({mappingId:'template'}, function (data) {
                 scope.formData.financialActivityId = 100;
@@ -11,7 +13,7 @@
             });
 
             scope.updateActivityOptions = function(activityId){
-                if(activityId === 100){
+                if(activityId === 100 || activityId === scope.interBranchLoanTransaction || activityId === scope.interBranchSavingsTransaction){
                     scope.accountOptions = scope.glAccountOptions.assetAccountOptions;
                 }else if(activityId === 200 || activityId === 201){
                     scope.accountOptions = scope.glAccountOptions.liabilityAccountOptions;

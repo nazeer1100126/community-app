@@ -253,6 +253,14 @@
                         }
                     }
                 }
+                else if (route == 'collections') {
+                    var temp4 = ['/interbranchsearch'];
+                    for (var i in temp4) {
+                        if (temp4[i] == location.path()) {
+                            return true;
+                        }
+                    }
+                }
                 else {
                     var active = route === location.path();
                     return active;

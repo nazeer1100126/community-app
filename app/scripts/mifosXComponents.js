@@ -288,6 +288,7 @@ define(['Q', 'underscore', 'mifosX'], function (Q) {
             'organization/smscampaigns/ViewSmsCampaignController',
             'organization/smscampaigns/EditSmsCampaignController',
             'organization/entitydatatablechecks/EntityDatatableChecksController',
+            'interbranch/SearchDetailsController'
         ],
         filters: [
             'StatusLookup',
